@@ -279,7 +279,7 @@ Za pokretanje projekta potrebno je:
 Klonirati GitHub repozitorijum:
 
 ```bash
-git clone URL_REPOZITORIJUMA
+git clone https://github.com/lvojvodic/Iot-pametno-skladiste.git
 ```
 
 Otvoriti preuzeti folder u Visual Studio Code-u.
