@@ -1,51 +1,22 @@
+#include "pir.h"
 #include "driver/gpio.h"
-#include "esp_log.h"
 
-#define BUZZER_GPIO GPIO_NUM_16
+#define PIR_GPIO GPIO_NUM_5
 
-static const char *TAG = "BUZZER";
-
-esp_err_t buzzer_init(void)
+void pir_init(void)
 {
     gpio_config_t config = {
-        .pin_bit_mask = 1ULL << BUZZER_GPIO,
-        .mode = GPIO_MODE_OUTPUT,
+        .pin_bit_mask = 1ULL << PIR_GPIO,
+        .mode = GPIO_MODE_INPUT,
         .pull_up_en = GPIO_PULLUP_DISABLE,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
         .intr_type = GPIO_INTR_DISABLE
     };
 
-    esp_err_t err = gpio_config(&config);
-
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Greska pri konfiguraciji GPIO16: %s",
-                 esp_err_to_name(err));
-        return err;
-    }
-
-    err = gpio_set_level(BUZZER_GPIO, 1);
-
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Greska pri iskljucivanju buzzera: %s",
-                 esp_err_to_name(err));
-        return err;
-    }
-
-    ESP_LOGI(TAG, "Buzzer inicijalizovan na GPIO16");
-
-    return ESP_OK;
+    ESP_ERROR_CHECK(gpio_config(&config));
 }
 
-esp_err_t buzzer_on(void)
+bool pir_motion_detected(void)
 {
-    ESP_LOGI(TAG, "Ukljucujem buzzer");
-
-    return gpio_set_level(BUZZER_GPIO, 0);
-}
-
-esp_err_t buzzer_off(void)
-{
-    ESP_LOGI(TAG, "Iskljucujem buzzer");
-
-    return gpio_set_level(BUZZER_GPIO, 1);
+    return gpio_get_level(PIR_GPIO) == 1;
 }
